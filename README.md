@@ -44,6 +44,12 @@ $ crontab -l | cronv -o ./my_cron_schedule.html -d 24h
 > Cronv can parse cron entry written in basic cron format.
 You can see the basically crontab specofication in [https://en.wikipedia.org/wiki/Cron#CRON_expression](https://en.wikipedia.org/wiki/Cron#CRON_expression).
 
+You can also add a comment to the end of a crontab entry indicating its estimated job duration in minutes. The bar widths in the output will correspond to how long the job takes, resembling a gantt chart
+
+```
+0 3 * * 2 bash ~/some_script.sh #2
+```
+
 
 ## Options
 

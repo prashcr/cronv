@@ -2,6 +2,7 @@ package cronv
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -80,4 +81,17 @@ func ParseCrontab(line string) (*Crontab, error) {
 		Job:      strings.Join(job, " "),
 	}
 	return crontab, nil
+}
+
+func ParseJobDuration(line string) (float64, error) {
+	durationMinutes := 1.0
+	parts := strings.Split(line, "#")
+	if len(parts) > 1 {
+		minutes, err := strconv.ParseFloat(parts[1], 64)
+		if err != nil {
+			return durationMinutes, err
+		}
+		durationMinutes = minutes
+	}
+	return durationMinutes, nil
 }

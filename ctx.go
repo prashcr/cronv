@@ -2,17 +2,19 @@ package cronv
 
 import (
 	"fmt"
-	"github.com/tkmgo/cronexpr"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/tkmgo/cronexpr"
 )
 
 type Cronv struct {
-	Crontab         *Crontab
-	expr            *cronexpr.Expression
-	startTime       time.Time
-	durationMinutes float64
+	Crontab            *Crontab
+	expr               *cronexpr.Expression
+	startTime          time.Time
+	durationMinutes    float64
+	jobDurationMinutes float64
 }
 
 func NewCronv(line string, startTime time.Time, durationMinutes float64) (*Cronv, error) {
@@ -26,11 +28,16 @@ func NewCronv(line string, startTime time.Time, durationMinutes float64) (*Cronv
 		return nil, err
 	}
 
+	jobDurationMinutes, err := ParseJobDuration(line)
+	if err != nil {
+		return nil, err
+	}
 	cronv := &Cronv{
-		Crontab:         crontab,
-		expr:            expr,
-		startTime:       startTime,
-		durationMinutes: durationMinutes,
+		Crontab:            crontab,
+		expr:               expr,
+		startTime:          startTime,
+		durationMinutes:    durationMinutes,
+		jobDurationMinutes: jobDurationMinutes,
 	}
 	return cronv, nil
 }
@@ -48,7 +55,7 @@ func (self *Cronv) Iter() <-chan *Exec {
 		for next.Equal(eneTime) || eneTime.After(next) {
 			ch <- &Exec{
 				Start: next,
-				End:   next.Add(time.Duration(1) * time.Minute),
+				End:   next.Add(time.Duration(self.jobDurationMinutes) * time.Minute),
 			}
 			next = self.expr.Next(next)
 		}

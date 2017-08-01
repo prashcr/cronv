@@ -3,9 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/jessevdk/go-flags"
-	"github.com/takumakanari/cronv"
 	"os"
+
+	"github.com/jessevdk/go-flags"
+	"github.com/prashcr/cronv"
 )
 
 const (
